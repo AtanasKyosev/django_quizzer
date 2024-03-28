@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block main_block %}
+
+    <h1 class="display-4 text-center my-5">Edit Profile</h1>
+
+    <div class="container">
+    
+        <div class="row row-cols-sm-1 row-cols-lg-3 container">
+        
+            <div class="col">
+            </div>
+        
+            <div class="col-sm-auto col-md">
+                <div class="text-center mb-5">
+                
+                    {% if messages %}
+                        <ul>
+                            {% for message in messages %}
+                                <h5 class="text-danger">{{ message }}</h5>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                
+                </div>
+            
+                <form action="" method="post" enctype="multipart/form-data">
+                
+                    {% csrf_token %}
+                
+                    <div class="mb-5 d-flex justify-content-center">
+                    
+                        {% if user_profile.profile_img %}
+                            <img src="{{ user_profile.profile_img.url }}" width="150" height="150"
+                                 class="rounded-circle">
+                        {% else %}
+                            <img src="{% static 'images/user.jpg' %}" width="150" height="150"
+                                 class="rounded-circle">
+                        {% endif %}
+                    
+                    </div>
+                
+                    <div class="mb-3">
+                        <label for="exampleInputImage" class="form-label">Profile Picture</label>
+                        <input type="file" name="profile_img" class="form-control" id="exampleInputImage">
+                    </div>
+                
+                    <div class="mb-3">
+                        <label for="exampleInputFirstName" class="form-label ">First Name</label>
+                        <input type="text" name="first_name" value="{{ user_profile.user.first_name }}"
+                               class="form-control" id="exampleInputFirstName" required>
+                    </div>
+                
+                    <div class="mb-3">
+                        <label for="exampleInputLastName" class="form-label">Last Name</label>
+                        <input type="text" name="last_name" value="{{ user_profile.user.last_name }}"
+                               class="form-control" id="exampleInputLastName" required>
+                    </div>
+                
+                    <div class="mb-3">
+                        <label for="exampleInputEmail2" class="form-label">Email</label>
+                        <input type="email" name="email" value="{{ user_profile.user.email }}" class="form-control"
+                               id="exampleInputEmail2"
+                               aria-describedby="emailHelp" required>
+                    </div>
+                
+                    <div class="mb-3">
+                        <label for="exampleInputUsername1" class="form-label">Username</label>
+                        <input type="text" name="username" value="{{ user_profile.user.username }}" class="form-control"
+                               id="exampleInputUsername1"
+                               aria-describedby="emailHelp" required>
+                    </div>
+                
+                    <div class="mb-3">
+                        <label for="exampleInputLocation" class="form-label">Location</label>
+                        <input type="text" name="location" value="{{ user_profile.location }}" class="form-control"
+                               id="exampleInputLocation" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="exampleInputGender" class="form-label">Gender</label>
+                    
+                        <select class="form-select form-control" name="gender"
+                                id="exampleInputGender"
+                                aria-label="Default select example" required>
+                        
+                            <option selected>Choose Your Gender</option>
+                        
+                            <option {% if user_profile.gender == 'Male' %} selected {% endif %} value="Male">Male
+                            </option>
+                        
+                            <option {% if user_profile.gender == 'Female' %} selected {% endif %} value="Female">Female
+                            </option>
+                        
+                            <option {% if user_profile.gender == 'Other' %} selected {% endif %} value="Other">Other
+                            </option>
+                        
+                        </select>
+                    
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="exampleFormControlTextarea1" class="form-label">Bio</label>
+                        <textarea class="form-control" name="bio" id="exampleFormControlTextarea1" rows="3"
+                                  required>{{ user_profile.bio }}</textarea>
+                    </div>
+                
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-success">Save Profile</button>
+                    </div>
+                
+                </form>
+
+            </div>
+        
+            <div class="col">
+            </div>
+        
+        </div>
+    
+    </div>
+
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}About{% endblock %}
+
+{% block main_block %}
+
+<div class="container text-center">
+
+    <h1 class="display-4 text-center my-5">About Quizzer</h1>
+
+    <div class="container">
+        
+        <div class="row">
+            
+            <div class="col">
+            </div>
+            
+            <div class="col-sm-auto col-md-6">
+                
+                <img src="{% static 'images/about.jpg' %}" width="200px" height="auto" alt="boy">
+                
+                <p>Welcome to Quizzer, the ultimate destination for quiz enthusiasts! At Quizzer, we believe in the
+                    power of
+                    knowledge and fun. Our platform offers a wide range of quizzes on various topics, allowing users to
+                    test
+                    their knowledge, compete with friends, and climb the leaderboard.</p>
+                <p>Whether you're a trivia master or just looking for a fun way to learn something new, Quizzer has
+                    something
+                    for everyone. With our user-friendly interface, creating and taking quizzes has never been easier.
+                    You
+                    can
+                    even challenge your friends and see who comes out on top!</p>
+                <p>Join Quizzer today and embark on a journey of discovery, learning, and friendly competition. Let's
+                    see
+                    who
+                    will rise to the top of the leaderboard!</p>
+                
+                <a href="{% url 'all_quizzes' %}" class="btn btn-primary my-3">Start quizzing now!</a>
+                
+                <p>Got more questions? <a href="{% url 'FAQs' %}">Go to FAQs</a></p>
+                
+            </div>
+            
+            <div class="col">
+            </div>
+            
+        </div>
+        
+    </div>
+
+</div>
+
+{% endblock %}

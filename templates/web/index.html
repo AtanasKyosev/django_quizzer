@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block main_block %}
+
+    <div id="myCarousel" class="carousel slide mb-6" data-bs-ride="carousel">
+
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-label="Slide 1"
+                    aria-current="true"></button>
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"
+                    class=""></button>
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"
+                    class=""></button>
+        </div>
+
+        <div class="carousel-inner">
+
+            <div class="carousel-item active">
+
+                <div class="d-block w-100" style="height: 550px; overflow: hidden;">
+                    <img src="{% static 'images/backgroudd.jpg' %}" class="d-block w-100"
+                         style="height: 100%; object-fit: cover;"
+                         alt="Slide 1">
+                </div>
+
+                <div class="container">
+                    <div class="carousel-caption text-start">
+                        <h1>Welcome to Quizzer!</h1>
+                        <p class="opacity-75">Unlock your potential, one question at a time!</p>
+                        <p><a class="btn btn-lg btn-primary" href="{% url 'all_quizzes' %}">Start quizzing now!</a>
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="carousel-item">
+
+                <div class="d-block w-100" style="height: 550px; overflow: hidden;">
+                    <img src="{% static 'images/backgroudd.jpg' %}" class="d-block w-100"
+                         style="height: 100%; object-fit: cover;"
+                         alt="Slide 1">
+                </div>
+
+                <div class="container">
+
+                    <div class="carousel-caption">
+                        <h1>Top the Leaderboard now!</h1>
+                        <p class="opacity-75">Rise to the top and conquer every challenge!</p>
+                        <p><a class="btn btn-lg btn-primary" href="{% url 'leaderboard' %}">Check the Leaderboard!</a>
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="carousel-item">
+                <div class="d-block w-100" style="height: 550px; overflow: hidden;">
+                    <img src="{% static 'images/backgroudd.jpg' %}" class="d-block w-100"
+                         style="height: 100%; object-fit: cover;"
+                         alt="Slide 1">
+                </div>
+
+                <div class="container">
+
+                    <div class="carousel-caption text-end">
+                        <h1>Your journey begins here!</h1>
+                        <p class="opacity-75">Create your profile and let your achievements speak for themselves!</p>
+                        <p><a class="btn btn-lg btn-primary" href="{% url 'register' %}">Sign up now!</a></p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+
+    </div>
+
+    <div class="container mt-5">
+
+        <div class="row">
+
+            <div class="col">
+            </div>
+
+            <div class="col-sm-auto col-md-12">
+
+                {# QUIZZES PRE-VIEW #}
+
+                <h1 class="display-4 text-center my-5">Most recent quizzes</h1>
+
+                {% if quizzes|length > 0 %}
+
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+
+                        {% for quiz in quizzes %}
+
+                            <div class="col">
+
+                                <div class="card shadow-sm">
+
+                                    {% if quiz.thumbnail %}
+
+                                        <img class="bd-placeholder-img card-img-top" src="{{ quiz.thumbnail }}"
+                                             width="100%" height="225"
+                                             alt="">
+
+                                    {% else %}
+
+                                        <img class="bd-placeholder-img card-img-top"
+                                             src="{% static 'images/default_quiz.jpg' %}"
+                                             width="100%" height="225"
+                                             alt="">
+
+                                    {% endif %}
+
+                                    <div class="card-body">
+                                        <h4 class="mb-3">{{ quiz.title }}</h4>
+                                        <p class="card-text">Total
+                                            Questions: {{ quiz.question_set.all|length }} </p>
+                                        <p class="card-text">Category: {{ quiz.category.name }}</p>
+                                        <p class="card-text">{{ quiz.description }}</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+
+                                            <div class="btn">
+                                                <a href="{% url 'quiz' quiz.id %}" type="button"
+                                                   class="btn btn-sm btn-outline-success">Start
+                                                    Quiz</a>
+                                            </div>
+
+                                            <small class="text-body-secondary">{{ quiz.created_at|timesince }}</small>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                    <div class="text-center">
+                        <a class="mt-5 btn btn-lg btn-outline-primary" href="{% url 'all_quizzes' %}">Explore quizzes!</a>
+                    </div>
+
+                {% else %}
+
+                    <div class="col text-center">
+                        <p class="text-danger text-center fs-5">Oops! It seems there are no quizzes right now.</p>
+                    </div>
+
+                {% endif %}
+
+                {# LEADERBOARD PRE-VIEW #}
+
+                <div class="container text-center">
+
+                    <h1 class="display-4 my-5">Top 3 Users at The Leaderboard</h1>
+
+                    <div class="row">
+
+                        {% if leaderboard_users|length == 0 %}
+
+                            <div>
+                                <h4 class="mb-5 text-center text-danger">No users Available on Leaderboard!</h4>
+                            </div>
+
+                        {% else %}
+
+                            {% for rank in leaderboard_users %}
+
+                                <div class="col-lg-4 position-relative mb-4">
+                                    {% if rank.user.profile.profile_img %}
+                                        <img src="{{ rank.user.profile.profile_img.url }}" width="150" height="150"
+                                             class="image-fluid rounded-circle" alt="profile-pic">
+                                    {% else %}
+                                        <img src="{% static 'images/user.jpg' %}" width="150" height="150"
+                                             class="image-fluid rounded-circle" alt="profile-pic">
+                                    {% endif %}
+                                    <span class="position-absolute top-0 start-90 translate-middle badge rounded-pill bg-success">{{ forloop.counter }}</span>
+
+                                    <h2 class="fw-normal my-1">@{{ rank.user.username }}</h2>
+                                    <p>Total Score: {{ rank.total_score }}<br>User
+                                        since: {{ rank.user.date_joined|date:"F, Y" }}</p>
+
+                                    <p><a class="btn btn-outline-secondary mb-2"
+                                          href="{% url 'profile' rank.user.username %}">View profile »</a>
+                                    </p>
+                                </div>
+
+                            {% endfor %}
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="text-center">
+                <a class="btn btn-lg btn-outline-primary" href="{% url 'leaderboard' %}">Check the Leaderboard!</a>
+            </div>
+
+            <h1 class="display-5 text-center mt-5">Discover the ultimate quiz experience! Test your knowledge, challenge your friends, and explore a world of trivia with Quizzer.</h1>
+            <h1 class="display-4 text-center mt-2">Ready to learn more?</h1>
+            <h1 class="display-4 text-center my-3">Click below to dive into our story.</h1>
+        
+            <div class="text-center">
+                <a class="mt-4 btn btn-lg btn-outline-primary" href="{% url 'about' %}">Learn more!</a>
+            </div>
+
+            <div class="col">
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}

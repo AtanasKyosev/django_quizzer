@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}All Quizzes{% endblock %}
+
+{% block main_block %}
+    
+    <h1 class="display-4 text-center my-5">Quizzes' Administration</h1>
+
+    <div class="text-center">
+        <a href="{% url 'create_quiz' %}" class="mb-5 btn btn-primary" type="button">Create Quiz</a>
+    </div>
+
+    <div class="container">
+    
+    {% if quizzes|length > 0 %}
+        
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+
+            {% for quiz in quizzes %}
+                
+                <div class="col">
+                    <div class="card shadow-sm">
+                    
+                        {% if quiz.thumbnail %}
+                            <img class="bd-placeholder-img card-img-top" src="{{ quiz.thumbnail }}"
+                                 width="100%" height="225"
+                                 alt="">
+                        {% else %}
+                            <img class="bd-placeholder-img card-img-top"
+                                 src="{% static 'images/default_quiz.jpg' %}"
+                                 width="100%" height="225"
+                                 alt="">
+                        {% endif %}
+                    
+                        <div class="card-body">
+                            <h4 class="mb-3">{{ quiz.title }}</h4>
+                            <p class="card-text">Total Questions: {{ quiz.question_set.all|length }} </p>
+                            <p class="card-text">Category: {{ quiz.category.name }}</p>
+                            <p class="card-text">{{ quiz.description }}</p>
+                            
+                            <div class="d-flex justify-content-center">
+                                <a href="{% url 'edit_quiz' quiz.id %}" type="button"
+                                   class="fs-5 mx-1 btn btn-sm btn-outline-success">Edit</a>
+                                <a href="{% url 'delete_quiz' quiz.id %}" type="button"
+                                   class="fs-5 mx-1 btn btn-sm btn-outline-danger">Delete</a>
+                            </div>
+                            
+                        </div>
+                    
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+        
+        <div class="col text-center">
+            <p class="text-danger text-center fs-5">Oops! It seems there are no quizzes available.</p>
+        </div>
+
+    {% endif %}
+    
+    <div class="text-center">
+        <a href="{% url 'administration' %}" class="mt-5 btn btn-primary" type="button">Go Back</a>
+    </div>
+
+{% endblock %}

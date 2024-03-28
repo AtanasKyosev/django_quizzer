@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}FAQs{% endblock %}
+
+{% block main_block %}
+
+    <div class="container text-center">
+
+        <h1 class="display-4 text-center my-5">FAQs</h1>
+
+        <div class="container">
+
+            <div class="row">
+
+                <div class="col">
+                </div>
+
+                <div class="col-sm-auto col-md-6">
+                    <div class="accordion" id="accordionExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseOne"
+                                        aria-expanded="true" aria-controls="collapseOne">
+                                    How do I start taking quizzes on the website?
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show"
+                                 data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <p>To start taking quizzes, you can navigate to the homepage and browse through the
+                                        available quiz categories. Click on a category that interests you, and then
+                                        select a
+                                        specific quiz from the list. Once you've chosen a quiz, click on the "Start
+                                        Quiz"
+                                        button to begin answering questions.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseTwo"
+                                        aria-expanded="false" aria-controls="collapseTwo">
+                                    Are the quizzes on the website free to take?
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse"
+                                 data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <p>Yes, all quizzes on our website are free to take. You can access and attempt
+                                        quizzes without any cost or subscription requirement.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseThree"
+                                        aria-expanded="false" aria-controls="collapseThree">
+                                    Can I create and share my own quizzes on the website?
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse"
+                                 data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <p> Unfortunately, creating quizzes without being part of our team isn't supported.
+                                        If you're interested in contributing quizzes, we'd love to have you onboard!
+                                        Just reach out to us to explore collaboration opportunities.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseFour"
+                                        aria-expanded="false" aria-controls="collapseFour">
+                                    Is my personal information secure when using the website?
+                                </button>
+                            </h2>
+                            <div id="collapseFour" class="accordion-collapse collapse"
+                                 data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <p>We take your privacy and security seriously. All personal information you
+                                        provide,
+                                        such as email addresses or quiz results, is kept confidential and stored
+                                        securely.
+                                        We adhere to strict data protection guidelines to ensure your information
+                                        remains
+                                        safe and secure at all times.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br><br><br><br><br><br><br><br><br>
+
+                </div>
+                <div class="col">
+
+                </div>
+
+            </div>
+
+        </div>
+    
+    </div>
+
+{% endblock %}

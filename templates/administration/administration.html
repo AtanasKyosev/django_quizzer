@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Administration{% endblock %}
+
+{% block main_block %}
+
+    <h1 class="display-4 text-center mt-5 mb-4">Administration</h1>
+
+    <div class="text-center">
+        <a href="{% url 'users_list' %}" type="button" class="fs-3 mt-4 mx-1 btn btn-sm btn-primary">Users</a>
+        <a href="{% url 'quizzes_list' %}" type="button" class="fs-3 mt-4 mx-1 btn btn-sm btn-primary">Quizzes</a>
+    </div>
+
+        <div class="text-center">
+            <img src="{% static 'images/administration.png' %}" class="my-5 img-fluid" alt="administration">
+        </div>
+
+{% endblock %}

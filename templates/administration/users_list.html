@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}All Users{% endblock %}
+
+{% block main_block %}
+    
+    <div class="container mt-5">
+    
+        <div class="row">
+        
+            <div class="col">
+            </div>
+
+            <div class="col-sm-auto col-md-8">
+                <div class="container">
+                    <h1 class="display-4 text-center my-3">Users' Administration</h1>
+                    <h3 class="display-7 text-center my-3">Users List:</h3>
+                
+                    {% if users|length == 0 %}
+                        <div>
+                            <h4 class="text-center text-danger">No users available!</h4>
+                        </div>
+                        <div class="text-center">
+                            <a href="{% url 'administration' %}" class="mt-4 btn btn-primary" type="button">Go Back</a>
+                        </div>
+                    {% else %}
+                        
+                        {% for user in users %}
+                            
+                            <div class="d-none d-md-flex text-body-secondary pt-3">
+                                <div class="p-2 mb-0 small lh-sm border rounded-2 w-100
+                                    {% if user == request.user %}bg-secondary-subtle border-black{% endif %}">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center">
+                                            <h4 class="mt-1 text-gray-dark">#{{ forloop.counter }}</h4>
+
+                                            {% if user.profile.profile_img %}
+
+                                                <img src="{{ user.profile.profile_img.url }}"
+                                                     class="bd-placeholder-img flex-shrink-0 mx-2 rounded-circle"
+                                                     width="60" height="60">
+
+                                            {% else %}
+
+                                                <img src="{% static 'images/user.jpg' %}"
+                                                     class="bd-placeholder-img flex-shrink-0 mx-2 rounded-circle"
+                                                     width="60" height="60">
+
+                                            {% endif %}
+
+                                            <div>
+                                                <h3 class="m-0 text-gray-dark">@{{ user.username }}</h3>
+                                            </div>
+
+
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                        
+                                            {% if request.user.is_superuser %}
+                                                <form class="m-2"
+                                                      action="{% url 'update_user_to_staff' user.username %}"
+                                                      method="post">
+                                                    {% csrf_token %}
+                                                    <label class="fs-5" for="is_staff">Staff&nbsp;</label>
+                                                    <input type="checkbox" name="is_staff"
+                                                           {% if user.is_staff %}checked{% endif %}
+                                                           onchange="this.form.submit()">
+                                                </form>
+                                            {% else %}
+                                                <form class="m-2" disabled>
+                                                    <label class="fs-5" for="is_staff">Staff&nbsp;</label>
+                                                    <input type="checkbox" name="is_staff"
+                                                           {% if user.is_staff %}checked{% endif %} disabled>
+                                                </form>
+                                            {% endif %}
+
+                                            {% if request.user.is_superuser %}
+                                                <a href="{% url 'delete_profile' user.username %}"
+                                                   class="fs-5 mx-2 btn btn-danger">Delete</a>
+                                            {% else %}
+                                                <a class="fs-5 mx-2 btn btn-danger">Delete</a>
+                                            {% endif %}
+                                        </div>
+                                    
+                                    </div>
+                                
+                                </div>
+                            
+                            </div>
+
+                            <div class="d-flex text-body-secondary pt-3 d-sm-block d-md-none">
+                            
+                                <div class="p-2 mb-0 small border rounded-2 w-100 {% if user == request.user %}bg-secondary-subtle border-black{% endif %}">
+                                    
+                                    <div class="d-flex flex-column flex-md-row justify-content-center justify-content-md-between align-items-center">
+                                        
+                                        <div class="text-center text-md-start mb-2 mb-md-0">
+                                            
+                                            <h4 class="mt-1 text-gray-dark">#{{ forloop.counter }}</h4>
+
+                                            {% if user.profile.profile_img %}
+
+                                                <img src="{{ user.profile.profile_img.url }}"
+                                                     class="bd-placeholder-img flex-shrink-0 mx-md-2 rounded-circle"
+                                                     width="150" height="150">
+
+                                            {% else %}
+
+                                                <img src="{% static 'images/user.jpg' %}"
+                                                     class="bd-placeholder-img flex-shrink-0 mx-md-2 rounded-circle"
+                                                     width="150" height="150">
+
+                                            {% endif %}
+
+                                            <h4 class="mt-2 text-gray-dark">@{{ user.username }}</h4>
+                                        
+                                        </div>
+
+                                        {% if request.user.is_superuser %}
+                                            
+                                            <form class="mb-2" action="{% url 'update_user_to_staff' user.username %}"
+                                                  method="post">
+                                            
+                                                {% csrf_token %}
+                                            
+                                                <label for="is_staff">Staff&nbsp;</label>
+                                                <input type="checkbox" name="is_staff"
+                                                       {% if user.is_staff %}checked{% endif %}
+                                                       onchange="this.form.submit()">
+                                            </form>
+
+                                            <a href="{% url 'delete_profile' user.username %}"
+                                               class="mb-2 btn btn-danger">Delete</a>
+                                            
+                                        {% else %}
+                                            
+                                            <form class="mb-2" disabled>
+                                                <label for="is_staff">Staff&nbsp;</label>
+                                                <input type="checkbox" name="is_staff"
+                                                       {% if user.is_staff %}checked{% endif %} disabled>
+                                            </form>
+
+                                            <a class="mb-2 btn btn-danger">Delete</a>
+                                            
+                                        {% endif %}
+
+                                    </div>
+                                
+                                </div>
+                            
+                            </div>
+
+                        {% endfor %}
+                        
+                    {% endif %}
+
+                </div>
+
+                <div class="text-center">
+                    <a href="{% url 'administration' %}" class="mt-5 btn btn-primary" type="button">Go Back</a>
+                </div>
+
+            </div>
+        
+            <div class="col">
+            </div>
+        
+        </div>
+    
+    </div>
+
+{% endblock %}

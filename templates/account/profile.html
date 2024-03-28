@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Profile{% endblock %}
+
+{% block main_block %}
+
+    <h1 class="display-4 text-center my-5">@{{ user_profile.user.username }}</h1>
+    
+    <div class="container text-center">
+    
+        {% if request.user.username == user_profile.user.username %}
+            <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                <a href="{% url 'edit_profile' request.user.username %}" type="button" class="btn btn-outline-success">Edit</a>
+
+                <a href="{% url 'delete_profile' request.user.username %}" type="button"
+                   class="btn btn-outline-danger">Delete</a>
+            </div>
+        {% elif request.user.is_superuser %}
+            <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                <a href="{% url 'delete_profile' user_profile.user.username %}" type="button"
+                   class="btn btn-outline-danger">Delete</a>
+            </div>
+        {% endif %}
+
+        <div class="container my-4">
+        
+            <div class="row">
+            
+                <div class="col-md col-sm-auto">
+                
+                    {% if user_profile.profile_img %}
+                        <img src="{{ user_profile.profile_img.url }}" width="150" height="150" class="rounded-circle">
+                    {% else %}
+                        <img src="{% static 'images/user.jpg' %}" width="150" height="150"
+                             class="rounded-circle">
+                    {% endif %}
+                
+                    <h2 class="fs-3 my-2">@{{ user_profile.user.username }}</h2>
+                
+                </div>
+            
+                <div class="col-md col-sm-auto">
+                    
+                    <h2>{{ user_profile.full_name|default:'Name not available.' }}</h2>
+                    
+                    <p class="fs-5"><i
+                            class="bi bi-gender-ambiguous"></i> {{ user_profile.gender|default:'Gender not available.' }}
+                    </p>
+                    <p class="fs-5"><i
+                            class="bi bi-geo-alt-fill"></i> {{ user_profile.location|default:'Location not available.' }}
+                    </p>
+                    <p class="fs-5"><i
+                            class="bi bi-file-person"></i> {{ user_profile.bio|default:'Bio not available.' }}</p>
+                </div>
+            
+            </div>
+        
+        </div>
+    
+        <hr class="my-4">
+    
+        <div class="container">
+        
+            <div class="row">
+            
+                <div class="col">
+                </div>
+            
+                <div class="col-md-8 col-sm-auto">
+                    <h3 class="fs-3">Quizzes attended by @{{ user_profile.user.username }}</h3>
+                    {% if submissions|length > 0 %}
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Quiz</th>
+                            <th scope="col">Marks</th>
+                            <th scope="col">Time</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for submission in submissions %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter }}</th>
+                                <td>
+                                    <a href="{% url 'search' ' ' %}?search_pattern={{ submission.quiz.title }}">{{ submission.quiz.title }}</a>
+                                </td>
+                                <td>{{ submission.score }}/{{ submission.quiz.question_set.all|length }}</td>
+                                <td>{{ submission.submited_at|timesince }} ago</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                        
+                    {% else %}
+                        <h2 class="text-danger my-5">No quizzes attended.</h2>
+                    {% endif %}
+                
+                </div>
+            
+                <div class="col">
+                </div>
+            
+            </div>
+        
+        </div>
+
+{% endblock %}

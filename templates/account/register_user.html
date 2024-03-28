@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Register{% endblock %}
+
+{% block main_block %}
+
+    <h1 class="display-4 text-center mt-5 mb-4">Register</h1>
+
+    <div class="container">
+    
+        <div class="row">
+        
+            <div class="col">
+            </div>
+        
+            <div class="col-sm-auto col-md">
+                <div>
+                    {% if messages %}
+                        <ul>
+                            {% for message in messages %}
+                                <h5 class="text-danger">{{ message }}</h5>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            
+                <form action="{% url 'register' %}" method="post">
+                    
+                    {% csrf_token %}
+
+                    <div class="mb-3 mt-4">
+                        <label for="exampleInputEmail" class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" id="exampleInputEmail1"
+                               aria-describedby="emailHelp" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="exampleInputUsername" class="form-label">Username</label>
+                        <input type="username" name="username" class="form-control" id="exampleInputUsername"
+                               aria-describedby="emailHelp" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" id="exampleInputPassword1" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="exampleInputPassword2" class="form-label">Repeat password</label>
+                        <input type="password" name="password2" class="form-control" id="exampleInputPassword1"
+                               required>
+                    </div>
+                    
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="exampleCheck1" required>
+                        <label class="form-check-label" for="exampleCheck1">Terms and Conditions</label>
+                    </div>
+                    
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary mb-2 text-center">Register</button>
+                        <p class="mb-4">Already have an account? <a href="{% url 'login' %}">Login</a></p>
+                    </div>
+                    
+                </form>
+            
+            </div>
+        
+            <div class="col">
+            </div>
+        
+        </div>
+    
+    </div>
+
+{% endblock %}
