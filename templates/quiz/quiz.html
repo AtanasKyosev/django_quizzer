@@ -3,153 +3,101 @@
 {% block title %}{{ quiz.title }}{% endblock %}
 
 {% block main_block %}
-
-    <h1 class="display-4 text-center my-5">{{ quiz.title }}</h1>
+    
+    <h1 class="display-4 text-center mt-5 mb-3" >{{ quiz.title }}</h1>
 
     <p class="fs-5 text-center">{{ quiz.description }}</p>
 
-    <div class="container">
-        <div class="d-flex justify-content-between">
-            <span class="fs-5">{{ quiz.created_at }}</span>
-            <span class="fs-5" id="timer"></span>
+    <div class="container mt-2">
+
+    <div class="row">
+
+        <div class="col">
         </div>
 
-        {% for message in messages %}
-            <div id="message-div">
-                <h4 class="text-center text-success">{{ message }}</h4>
+        <div class="col-sm-auto col-md-8">
+            <div class="text-center mb-3">
+                <span class="fs-7" id="displaytimer"><b>Timer: 0 seconds</b></span>
             </div>
-        {% endfor %}
 
-        <div class="questions">
-
-            {% for question in quiz.question_set.all %}
-                <div class="card my-4 question">
-                    <div class="card-header fw-bold">
-                        Question {{ forloop.counter }}
-                    </div>
-
-                    <div class="card-body">
-
-                        <p class="card-text">{{ question.text }}</p>
-
-                        {% for option in question.choice_set.all %}
-                            <div class="form-check">
-                                <label class="form-check-label" for="{{ option.id }}">
-                                    <input class="form-check-input" value="{{ option.text }}" type="radio"
-                                           name="{{ option.question.id }}"
-                                           id="{{ option.id }}">
-                                    {{ option.text }}
-                                </label>
-
-                                {% if option.is_correct %}
-                                    <span class="visually-hidden correct-answer">{{ option.text }}</span>
-                                {% endif %}
-
+            <div class="questions">
+                <form method='post' action=''>
+                
+                    {% csrf_token %}
+                
+                    {% for question in questions %}
+                        
+                        <div class="card mb-3">
+                        
+                            <div class="card-header fw-bold">
+                                Question {{ forloop.counter }}
                             </div>
 
-                        {% endfor %}
+                            <div class="card-body">
+                                <p class="card-text">{{ question.question_text }}</p>
 
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="question_{{ question.id }}"
+                                           id="option_{{ question.id }}_1" value="{{ question.option_1 }}">
+                                    <label class="form-check-label"
+                                           for="option_{{ question.id }}_1">{{ question.option_1 }}</label>
+                                </div>
+                                
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="question_{{ question.id }}"
+                                           id="option_{{ question.id }}_2" value="{{ question.option_2 }}">
+                                    <label class="form-check-label"
+                                           for="option_{{ question.id }}_2">{{ question.option_2 }}</label>
+                                </div>
+                                
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="question_{{ question.id }}"
+                                           id="option_{{ question.id }}_3" value="{{ question.option_3 }}">
+                                    <label class="form-check-label"
+                                           for="option_{{ question.id }}_3">{{ question.option_3 }}</label>
+                                </div>
+                                
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="question_{{ question.id }}"
+                                           id="option_{{ question.id }}_4" value="{{ question.option_4 }}">
+                                    <label class="form-check-label"
+                                           for="option_{{ question.id }}_4">{{ question.option_4 }}</label>
+                                </div>
+
+                            </div>
+                        
+                        </div>
+                        
+                    {% endfor %}
+                
+                    <div class="text-center">
+                        <input id='timer' type='hidden' name="timer" value="">
+                        <button type="submit" class="text-center btn btn-primary">Submit</button>
                     </div>
-
-                </div>
-
-            {% endfor %}
+                
+                </form>
+            
+            </div>
 
         </div>
 
-        <div class="text-center">
-
-            <form action="" method="post" id="quiz-form">
-
-                {% csrf_token %}
-
-                <input type="hidden" name="score" value="0" id="user-score">
-                <button type="submit" class="btn btn-primary" id="submit-button">Submit</button>
-
-            </form>
-
+        <div class="col">
         </div>
 
     </div>
 
     <script>
-        // Elements
-        var submitButton = document.getElementById("submit-button");
-        var timerSpan = document.getElementById("timer");
-        var quizForm = document.getElementById("quiz-form");
-        var questions = document.querySelectorAll(".question");
-        var userScoreInput = document.getElementById("user-score");
 
-        quizDuration = (questions.length) * 60 // convert in seconds
-        // Update Timer
-        function updateTimer() {
-            var minutes = Math.floor(quizDuration / 60);
-            var seconds = quizDuration % 60;
+        const timer = document.getElementById('displaytimer')
+        console.log(timer.textContent)
+        const inputtag = document.getElementById('timer')
 
-            timerSpan.innerText = minutes + "m" + seconds + "s";
-
-            // Check if the time ended
-            if (quizDuration <= 0) {
-                // Submit the quiz automatically
-                clearTimeout(quizTimerID);
-                submitQuiz();
-            } else if (document.getElementById("message-div")) {
-                clearTimeout(quizTimerID);
-                highlightCorrectAnswers();
-            } else {
-                // Decrement the timer value by 1 second
-                quizDuration--;
-            }
-        }
-
-        //Function to submit the quiz
-        function submitQuiz() {
-            // Calculate the score
-            calculateScore();
-            // Submit the quiz
-            quizForm.submit();
-        }
-
-        // Function to check the correct answears and calculate the score
-        function calculateScore() {
-            var score = 0;
-
-            // Loop through each qustion
-            questions.forEach(question => {
-                var selectedInput = question.querySelector('input:checked');
-                var correctAnswer = question.querySelector(".correct-answer").innerText;
-
-                // Check if the answer is correct or not
-                if (selectedInput && selectedInput.value === correctAnswer) {
-                    score += 1;
-                }
-            });
-
-            // Update the hidden input field with score in form
-            userScoreInput.value = score;
-        }
-
-        // Highlight the correct anwear while showing results
-        function highlightCorrectAnswers() {
-            questions.forEach(question => {
-                var correctAnswer = question.querySelector(".correct-answer");
-                correctAnswer.previousElementSibling.querySelector("input").classList.add("bg-success");
-                correctAnswer.previousElementSibling.classList.add("fw-bold");
-            })
-
-            // Disable Submit button and disable all options
-            submitButton.disabled = true;
-            var options = document.querySelectorAll(".form-check-input")
-            options.forEach(option => {
-                option.disabled = true;
-            })
-        }
-
-        // Attach Even Listener to Submit button
-        submitButton.addEventListener("click", submitQuiz);
-
-        // Timer Interval
-        quizTimerID = setInterval(updateTimer, 1000);
+        t = 0
+        setInterval(() => {
+            t += 1
+            timer.innerHTML = "<b>Timer: " + t + " seconds</b>"
+            inputtag.value = t
+        }, 1000)
     </script>
-    
+
 {% endblock %}

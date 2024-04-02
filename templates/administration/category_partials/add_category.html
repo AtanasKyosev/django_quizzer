@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Category{% endblock %}
+
+{% block main_block %}
+
+    <h1 class="display-4 text-center mt-5 mb-4">Add Category</h1>
+
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col">
+            </div>
+
+            <div class="col-sm-auto col-md">
+
+                <form action="{% url 'add_category' %}" method="post">
+
+                    {% csrf_token %}
+
+                    <div class="mb-3 mt-4 text-center">
+                        <label for="id_name" class="form-label">Category Name</label>
+                        <input type="text" name="name" class="form-control" id="id_name" required>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary mb-4 text-center">Add Category</button>
+                    </div>
+
+                </form>
+                <p class="mb-4 text-center">Want to go back? <a href="{% url 'quizzes_list' %}">Go Back</a></p>
+
+            </div>
+
+            <div class="col">
+            </div>
+
+        </div>
+
+    </div>
+
+     <br><br><br><br><br><br><br><br><br>
+
+{% endblock %}

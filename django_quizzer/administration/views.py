@@ -2,8 +2,8 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from django_quizzer.account.models import Profile
-from django_quizzer.quiz.forms import QuizForm
-from django_quizzer.quiz.models import Category, Quiz
+from django_quizzer.quiz.forms import QuizForm, QuestionForm, CategoryForm
+from django_quizzer.quiz.models import Category, Quiz, Question
 
 
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
@@ -19,7 +19,7 @@ def users_list(request):
         'users': users,
     }
 
-    return render(request, 'administration/users_list.html', context)
+    return render(request, 'administration/user_partials/users_list.html', context)
 
 
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
@@ -52,7 +52,24 @@ def quizzes_list(request):
         'categories': categories,
     }
 
-    return render(request, 'administration/quizzes_list.html', context)
+    return render(request, 'administration/quiz_partials/quizzes_list.html', context)
+
+
+@user_passes_test(lambda u: u.is_superuser or u.is_staff)
+def add_category(request):
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('quizzes_list')
+    else:
+        form = CategoryForm()
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'administration/category_partials/add_category.html', context)
 
 
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
@@ -75,7 +92,7 @@ def create_quiz(request):
         'categories': categories,
     }
 
-    return render(request, 'administration/create_quiz.html', context)
+    return render(request, 'administration/quiz_partials/create_quiz.html', context)
 
 
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
@@ -97,7 +114,7 @@ def edit_quiz(request, quiz_id):
         'categories': categories,
     }
 
-    return render(request, 'administration/edit_quiz.html', context)
+    return render(request, 'administration/quiz_partials/edit_quiz.html', context)
 
 
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
@@ -112,4 +129,74 @@ def delete_quiz(request, quiz_id):
         'quiz': quiz,
     }
 
-    return render(request, 'administration/delete_quiz.html', context)
+    return render(request, 'administration/quiz_partials/delete_quiz.html', context)
+
+
+@user_passes_test(lambda u: u.is_superuser or u.is_staff)
+def questions_view(request, quiz_id):
+    quiz = get_object_or_404(Quiz, pk=quiz_id)
+    questions = Question.objects.filter(quiz=quiz).all()
+    total_questions = questions.count()
+
+    context = {
+        'quiz': quiz,
+        'questions': questions,
+        'total_questions': total_questions,
+    }
+
+    return render(request, 'administration/question_partials/questions.html', context)
+
+
+@user_passes_test(lambda u: u.is_superuser or u.is_staff)
+def add_question(request, quiz_id):
+    quiz = get_object_or_404(Quiz, pk=quiz_id)
+
+    if request.method == 'POST':
+        form = QuestionForm(request.POST)
+        if form.is_valid():
+            question = form.save(commit=False)
+            question.quiz = quiz
+            question.save()
+            return redirect('questions', quiz.id)
+    else:
+        form = QuestionForm()
+
+    context = {
+        'quiz': quiz,
+        'form': form,
+    }
+
+    return render(request, 'administration/question_partials/add_question.html', context)
+
+
+@user_passes_test(lambda u: u.is_superuser or u.is_staff)
+def edit_question(request, quiz_id, question_id):
+    quiz = get_object_or_404(Quiz, pk=quiz_id)
+    question = get_object_or_404(Question, pk=question_id)
+
+    if request.method == 'POST':
+        form = QuestionForm(request.POST, instance=question)
+        if form.is_valid():
+            form.save()
+            return redirect('questions', quiz_id=quiz.id)
+    else:
+        form = QuestionForm(instance=question)
+
+    context = {
+        'quiz': quiz,
+        'form': form,
+        'question': question,
+    }
+
+    return render(request, 'administration/question_partials/edit_question.html', context)
+
+
+@user_passes_test(lambda u: u.is_superuser or u.is_staff)
+def delete_question(request, quiz_id, question_id):
+    quiz = get_object_or_404(Quiz, pk=quiz_id)
+    question = get_object_or_404(Question, pk=question_id)
+
+    if request.method == 'POST':
+        question.delete()
+        return redirect('questions', quiz_id=quiz.id)
+

@@ -139,7 +139,7 @@
                                         <div class="d-flex justify-content-between align-items-center">
 
                                             <div class="btn">
-                                                <a href="{% url 'quiz' quiz.id %}" type="button"
+                                                <a href="{% url 'start_quiz' quiz.id %}" type="button"
                                                    class="btn btn-sm btn-outline-success">Start
                                                     Quiz</a>
                                             </div>
@@ -181,7 +181,7 @@
                         {% if leaderboard_users|length == 0 %}
 
                             <div>
-                                <h4 class="mb-5 text-center text-danger">No users Available on Leaderboard!</h4>
+                                <p class="fs-5 mb-5 text-center text-danger">No users available on Leaderboard!</p>
                             </div>
 
                         {% else %}

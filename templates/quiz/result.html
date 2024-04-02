@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Results{% endblock %}
+
+{% block main_block %}
+
+
+    <h1 class="display-4 text-center mt-5 mb-3 text-success">Quiz submitted successfully!</h1>
+
+    <h5 class="fs-1 text-center">Score: {{ score }}/{{ total }}</h5>
+
+    <p class="fs-2 card-text text-center">Time Taken: {{ time }} seconds</p>
+
+    <p class="fs-2 card-text text-center text-success">Good job!</p>
+
+    <br>
+    <div class="d-flex justify-content-center">
+        <p class="text-center"><a href="{% url 'all_quizzes' %}" class="mx-1 btn btn-primary">Go Back to Quizzes</a></p>
+        <p class="text-center"><a href="{% url 'leaderboard' %}" class="mx-1 btn btn-primary">Check Leaderboard!</a></p>
+    </div>
+
+    <br><br><br><br><br><br><br>
+
+
+{% endblock %}

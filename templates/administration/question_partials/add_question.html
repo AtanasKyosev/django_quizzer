@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Question{% endblock %}
+
+{% block main_block %}
+
+    <h1 class="display-4 text-center mt-5 mb-4">Add Question: {{ quiz.title }}</h1>
+
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col">
+            </div>
+
+            <div class="col-sm-auto col-md">
+
+                <form action="{% url 'add_question' quiz.id %}" method="post">
+
+                    {% csrf_token %}
+
+                    <div class="mb-3 mt-4">
+                        <label for="exampleInputQuestionText" class="form-label">Question Text</label>
+                        <input type="text" name="question_text" class="form-control" id="exampleInputQuestionText"
+                               required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="exampleInputOption1" class="form-label">Option 1</label>
+                        <input type="text" name="option_1" class="form-control" id="exampleInputOption1" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="exampleInputOption2" class="form-label">Option 2</label>
+                        <input type="text" name="option_2" class="form-control" id="exampleInputOption2" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="exampleInputOption3" class="form-label">Option 3</label>
+                        <input type="text" name="option_3" class="form-control" id="exampleInputOption3" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="exampleInputOption4" class="form-label">Option 4</label>
+                        <input type="text" name="option_4" class="form-control" id="exampleInputOption4" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="exampleInputAnswer" class="form-label">Answer</label>
+                        <input type="text" name="answer" class="form-control" id="exampleInputAnswer" required>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary mb-4 text-center">Add Question</button>
+                    </div>
+
+                </form>
+                
+                <p class="mb-4 text-center">Want to go back? <a href="{% url 'questions' quiz.id %}">Back to All
+                    Questions</a></p>
+
+            </div>
+
+            <div class="col">
+            </div>
+
+        </div>
+
+    </div>
+    
+{% endblock %}

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from django_quizzer.quiz.models import Quiz, Category, Question, Choice, QuizSubmission, UserRank
+from django_quizzer.quiz.models import Quiz, Category, Question, QuizSubmission, UserRank
 
 
 @admin.register(Quiz)
@@ -15,11 +15,6 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(Choice)
-class ChoiceAdmin(admin.ModelAdmin):
     pass
 
 

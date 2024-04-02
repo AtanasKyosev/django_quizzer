@@ -1,14 +1,16 @@
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.contrib import messages
+from django.db.models import Count
 from django.shortcuts import render, redirect
-from django_quizzer.account.models import Profile
-from django_quizzer.quiz.models import Category, Quiz, QuizSubmission, UserRank
+from django_quizzer.quiz.models import Category, Quiz, QuizSubmission, UserRank, Question
 
 
 def all_quizzes(request):
     quizzes = Quiz.objects.all().order_by('-created_at')
     categories = Category.objects.all().order_by('name')
+
+    for quiz in quizzes:
+        if quiz.question_set.count() < 3:
+            quizzes = quizzes.exclude(id=quiz.id)
 
     context = {
         'quizzes': quizzes,
@@ -29,6 +31,9 @@ def search_view(request, category):
     else:
         quizzes = Quiz.objects.all().order_by('-created_at')
 
+    # Exclude quizzes with less than 3 questions
+    quizzes = quizzes.annotate(question_count=Count('question')).filter(question_count__gte=3)
+
     categories = Category.objects.all().order_by('name')
 
     context = {
@@ -40,48 +45,57 @@ def search_view(request, category):
 
 
 @login_required(login_url='login')
-def quiz_view(request, quiz_id):
-    user_object = User.objects.get(username=request.user)
-    user_profile = Profile.objects.get(user=user_object)
+def start_quiz(request, quiz_id):
     quiz = Quiz.objects.filter(id=quiz_id).first()
-    total_questions = quiz.question_set.all().count()
+    user = request.user
+    questions = Question.objects.filter(quiz=quiz).all()
+    total_questions = questions.count()
+
+    if quiz is None:
+        return redirect('all_quizzes')
 
     if request.method == 'POST':
-        score = int(request.POST.get('score', 0))
+        total = 0
+        score = 0
 
-        existing_submission = QuizSubmission.objects.filter(user=request.user, quiz=quiz).first()
+        for question in questions:
+            total += 1
+            selected_option = request.POST.get(f'question_{question.id}', '')
+
+            if selected_option == '':
+                continue
+            if selected_option == question.answer:
+                score += 1
+
+        existing_submission = QuizSubmission.objects.filter(user=user, quiz=quiz).first()
 
         if existing_submission:
-
-            messages.success(request, f'This time you got {score} out of {total_questions}!')
-            existing_submission.score = score
-            existing_submission.save()
-
-            return redirect('quiz', quiz_id)
-
-        submission = QuizSubmission(user=request.user, quiz=quiz, score=score)
-        submission.save()
-
-        messages.success(request, f'Quiz Submitted Successfully You got {score} out of {total_questions}!')
-
-        return redirect('quiz', quiz_id)
-
-    if quiz is not None:
+            existing_submission.delete()
+            submission = QuizSubmission.objects.create(user=user, quiz=quiz, score=score)
+            submission.save()
+        else:
+            submission = QuizSubmission(user=user, quiz=quiz, score=score)
+            submission.save()
 
         context = {
-            'quiz': quiz,
-            'user_profile': user_profile,
+            'score': score,
+            'time': request.POST.get('timer'),
+            'total': total,
         }
 
-    else:
+        return render(request, 'quiz/result.html', context)
 
-        return redirect('quiz_catalogue')
+    context = {
+        'quiz': quiz,
+        'questions': questions,
+        'total_questions': total_questions,
+    }
 
     return render(request, 'quiz/quiz.html', context)
 
 
 def leaderboard_view(request):
-    leaderboard_users = UserRank.objects.order_by('rank')[:100]
+    leaderboard_users = UserRank.objects.order_by('rank')
 
     context = {
         'leaderboard_users': leaderboard_users,

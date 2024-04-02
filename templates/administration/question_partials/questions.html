@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}Questions{% endblock %}
+
+{% block main_block %}
+
+    <h1 class="display-4 text-center mt-5 mb-3">All Questions: {{ quiz.title }}</h1>
+
+    <p class="fs-5 text-center">Total Questions: {{ total_questions }}</p>
+
+    <div class="text-center mb-2">
+    
+        {% if total_questions < 10 %}
+            
+            <a href="{% url 'add_question' quiz.id %}" type="button"
+               class="fs-6 mx-1 btn btn-sm btn-primary">Add Question</a>
+            
+        {% else %}
+            
+            <a class="fs-6 mx-1 btn btn-sm btn-secondary text-decoration-line-through">Add Question</a>
+            <p class="fs-5 text-danger mt-2">Maximum questions reached!</p>
+            
+        {% endif %}
+    
+    </div>
+
+    <div class="container mt-2">
+
+        <div class="row">
+
+            <div class="col">
+            </div>
+
+            <div class="col-sm-auto col-md-8">
+
+                <div class="questions">
+                
+                    {% if questions|length == 0 %}
+                        
+                        <p class="fs-5 text-center text-danger">No questions yet!</p>
+                        <br><br><br><br><br><br><br><br><br><br>
+                        
+                    {% else %}
+
+                        {% for question in questions %}
+                            
+                            <div class="card mb-3">
+                                <div class="card-header fw-bold">
+                                    Question {{ forloop.counter }}
+                                </div>
+
+                                <div class="card-body">
+                                    <p class="card-text">Question: {{ question.question_text }}</p>
+
+                                    <div>
+                                        <label class="form-check-label"
+                                               for="option_{{ question.id }}_1">Answer
+                                            1: {{ question.option_1 }}</label>
+                                    </div>
+                                    <div>
+                                        <label class="form-check-label"
+                                               for="option_{{ question.id }}_2">Answer
+                                            2: {{ question.option_2 }}</label>
+                                    </div>
+                                    <div>
+
+                                        <label class="form-check-label"
+                                               for="option_{{ question.id }}_3">Answer
+                                            3: {{ question.option_3 }}</label>
+                                    </div>
+                                    <div>
+                                        <label class="form-check-label"
+                                               for="option_{{ question.id }}_4">Answer
+                                            4: {{ question.option_4 }}</label>
+                                    </div>
+                                    
+                                    <p class="card-text mt-3">Right Answer: {{ question.answer }}</p>
+                                    
+                                </div>
+                                
+                                <div class="d-flex mx-3 mb-3">
+                                    
+                                    <a href="{% url 'edit_question' quiz.id question.id %}" type="button"
+                                       class="fs-6 mx-1 btn btn-sm btn-success">Edit</a>
+                                    
+                                    <form action="{% url 'delete_question' quiz.id question.id %}" method="post">
+                                        
+                                        {% csrf_token %}
+                                        
+                                        <button type="submit" class="fs-6 mx-1 btn btn-sm btn-danger">Delete</button>
+                                        
+                                    </form>
+                                    
+                                </div>
+                            
+                            </div>
+                            
+                        {% endfor %}
+
+                    {% endif %}
+                
+                    <div class="text-center">
+                        <a href="{% url 'quizzes_list' %}" class="fs-6 btn btn-sm btn-primary">Go Back</a>
+                    </div>
+                
+                </div>
+
+            </div>
+
+            <div class="col">
+            </div>
+
+        </div>
+    
+{% endblock %}
